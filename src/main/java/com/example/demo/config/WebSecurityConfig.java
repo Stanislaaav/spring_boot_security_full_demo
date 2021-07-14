@@ -1,16 +1,11 @@
 package com.example.demo.config;
 
-import static com.example.demo.enums.UserPermissionEnum.COURSE_WRITE;
 import static com.example.demo.enums.UserRoleEnum.ADMIN;
 import static com.example.demo.enums.UserRoleEnum.ADMINTRAINEE;
 import static com.example.demo.enums.UserRoleEnum.STUDENT;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -49,35 +43,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest()
             .authenticated()
             .and()
-            .httpBasic();
+            .formLogin()
+            .loginPage("/login").permitAll();
     }
 
     @Override
     @Bean
     public UserDetailsService userDetailsServiceBean() throws Exception {
 
-        UserDetails ana =  User.builder()
+        UserDetails ana = User.builder()
             .username("ana")
             .password(passwordEncoder.encode("pass"))
 //            .roles(STUDENT.name())
             .authorities(STUDENT.getGrantedAutorities())
             .build();
 
-        UserDetails linda =  User.builder()
+        UserDetails linda = User.builder()
             .username("linda")
             .password(passwordEncoder.encode("pass1"))
 //            .roles(ADMIN.name())
             .authorities(ADMIN.getGrantedAutorities())
             .build();
 
-        UserDetails tom =  User.builder()
+        UserDetails tom = User.builder()
             .username("tom")
             .password(passwordEncoder.encode("pass1"))
 //            .roles(ADMINTRAINEE.name())
             .authorities(ADMINTRAINEE.getGrantedAutorities())
             .build();
 
-      return new InMemoryUserDetailsManager(ana, linda, tom);
+        return new InMemoryUserDetailsManager(ana, linda, tom);
 
     }
 }
