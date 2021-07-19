@@ -2,12 +2,13 @@ package com.example.demo.auth;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class UserDetailsImpl implements UserDetails {
+public class ApplicationUser implements UserDetails {
 
-    private final List<? extends GrantedAuthority> grantedAuthorities;
+    private final Set<? extends GrantedAuthority> grantedAuthorities;
     private final String password;
     private final String username;
     private final boolean isAccountNonExpired;
@@ -15,9 +16,9 @@ public class UserDetailsImpl implements UserDetails {
     private final boolean isCredentialsNonExpired;
     private final boolean isEnabled;
 
-    public UserDetailsImpl(List<? extends GrantedAuthority> grantedAuthorities,
+    public ApplicationUser(String username,
                            String password,
-                           String username,
+                           Set<? extends GrantedAuthority> grantedAuthorities,
                            boolean isAccountNonExpired,
                            boolean isAccountNonLocked,
                            boolean isCredentialsNonExpired,
