@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
 
+@Repository("fake")
 public class FakeApplicationUserDaoService implements ApplicationUserDao {
 
     private final PasswordEncoder passwordEncoder;
@@ -19,11 +21,13 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
 
     @Override
     public Optional<ApplicationUser> selectApplicationUserByUsername(String username) {
-        return Optional.empty();
+        return getUserDetails().stream()
+            .filter(applicationUser -> username.equals(applicationUser.getUsername()))
+            .findFirst();
     }
 
-    private List<UserDetails> getUserDetails() {
-        List<UserDetails> applicationUsers = Lists.newArrayList(
+    private List<ApplicationUser> getUserDetails() {
+        List<ApplicationUser> applicationUsers = Lists.newArrayList(
             new ApplicationUser(
                 "ana",
                 passwordEncoder.encode("pass"),
@@ -49,7 +53,7 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
                 true,
                 true,
                 true
-            ),
+            )
         );
 
         return applicationUsers;
